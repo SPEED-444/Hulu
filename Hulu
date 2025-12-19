@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Page</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Comic Sans MS", cursive;
+}
+
+body {
+    height: 100vh;
+    background: black;
+    color: hotpink;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Floating hearts */
+.hearts span {
+    position: absolute;
+    bottom: -50px;
+    font-size: 22px;
+    animation: floatUp 6s infinite ease-in;
+    opacity: 0.7;
+}
+.hearts span:nth-child(1){left:10%;animation-delay:0s}
+.hearts span:nth-child(2){left:30%;animation-delay:1s}
+.hearts span:nth-child(3){left:50%;animation-delay:2s}
+.hearts span:nth-child(4){left:70%;animation-delay:3s}
+.hearts span:nth-child(5){left:90%;animation-delay:4s}
+
+@keyframes floatUp {
+    0% {transform:translateY(0);opacity:0}
+    20%{opacity:0.8}
+    100%{transform:translateY(-110vh);opacity:0}
+}
+
+/* Front screen */
+#front {
+    text-align: center;
+}
+
+.typing {
+    font-size: 2.4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid hotpink;
+    width: 0;
+    animation: typing 3s steps(28,end) forwards, blink .7s infinite;
+}
+
+@keyframes typing { to { width: 100%; } }
+@keyframes blink { 50% { border-color: transparent; } }
+
+button {
+    margin-top: 30px;
+    padding: 12px 35px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 25px;
+    background: hotpink;
+    color: black;
+    cursor: pointer;
+    animation: pop 1.5s infinite;
+}
+
+@keyframes pop {
+    0%,100%{transform:scale(1)}
+    50%{transform:scale(1.08)}
+}
+
+/* Song screen */
+#song {
+    display: none;
+    text-align: center;
+    padding: 20px;
+}
+
+audio {
+    margin: 20px 0;
+}
+
+.lyrics {
+    min-height: 140px;
+    margin-top: 20px;
+}
+
+.line {
+    opacity: 0;
+    animation: fadeUp .8s forwards;
+    margin: 10px 0;
+    font-size: 1.2rem;
+}
+
+@keyframes fadeUp {
+    from {transform:translateY(10px);opacity:0}
+    to {transform:translateY(0);opacity:1}
+}
+</style>
+</head>
+
+<body>
+
+<div class="hearts">
+    <span>💗</span><span>💖</span><span>💕</span><span>💗</span><span>💖</span>
+</div>
+
+<!-- FIRST VIEW -->
+<div id="front">
+    <h1 class="typing">I want to tell u something</h1>
+    <button onclick="showSong()">Next</button>
+</div>
+
+<!-- SONG VIEW -->
+<div id="song">
+    <h1>I want to tell u something</h1>
+
+    <audio id="player" controls>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="lyrics" id="lyrics"></div>
+</div>
+
+<script>
+function showSong() {
+    document.getElementById("front").style.display = "none";
+    document.getElementById("song").style.display = "block";
+
+    const audio = document.getElementById("player");
+    audio.currentTime = 124; // 2:04
+    audio.play();
+}
+
+const lyrics = [
+    { time: 124, text: "zaraa paas to aa mere" },
+    { time: 128, text: "dheere se chhoo jaa muje" },
+    { time: 133, text: "bin tere ab na guzaara" },
+    { time: 138, text: "tere liye hum hain jiye 💗" },
+    { time: 143, text: "har aansu piye…" }
+];
+
+let currentLine = 0;
+const audio = document.getElementById("player");
+const lyricsBox = document.getElementById("lyrics");
+
+audio.addEventListener("timeupdate", () => {
+    if (currentLine < lyrics.length &&
+        audio.currentTime >= lyrics[currentLine].time) {
+
+        lyricsBox.innerHTML += `<p class="line">${lyrics[currentLine].text}</p>`;
+        currentLine++;
+    }
+});
+</script>
+
+</body>
+</html>
